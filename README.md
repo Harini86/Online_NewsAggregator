@@ -21,3 +21,5 @@ The Online News Aggregator is a web application designed to collect and display 
 2. The news content is displayed in columns, categorized by source (e.g., Times of India or Hindustan Times).
 3. The user can click on the "Speak" button next to each headline to hear the content being read aloud.
 4. The "Refresh News" button can be used to fetch the latest headlines from the sources again.
+## Online News Aggregator with text-to-speech website link: [GitHub]( http://127.0.0.1:8000/)
+
