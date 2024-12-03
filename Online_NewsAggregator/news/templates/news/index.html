@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online News Aggregator with Text-to-Speech</title>
+
+    <!-- Google Fonts for an Elegant Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS for Layout -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Body and Background Styles */
+        body {
+            background-color: #f4f6f9; /* Light Gray Background */
+            font-family: 'Montserrat', sans-serif; /* Modern Sans-serif Font for Text */
+            color: #333;
+        }
+
+        /* Jumbotron Styling */
+        .jumbotron {
+            background-color: #081743; /* Royal Blue */
+            color: #fff;
+            padding: 4rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif; /* Elegant Serif Font for Titles */
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff; /* White color for header */
+        }
+
+        /* News Card Styling */
+        .news-card {
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-card h5 {
+            font-family: 'Montserrat', sans-serif;
+            color: #34495e;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .news-card button {
+            background-color: #ffb84d; /* Orange-Yellow */
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .news-card button:hover {
+            background-color: #f39c12; /* Darker Orange-Yellow on Hover */
+            transform: scale(1.05);
+        }
+
+        /* Column Layout for News */
+        .container {
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        /* Button Styling */
+        .btn-light {
+            background-color: #ffb84d; /* Orange-Yellow */
+            color: #fff;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-light:hover {
+            background-color: #f39c12;
+            transform: scale(1.05);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .news-card {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Jumbotron Section -->
+    <div class="jumbotron text-center">
+        <h1>Online News Aggregator</h1>
+        <a href="/" class="btn btn-light mt-3">Refresh News</a>
+    </div>
+
+    <!-- News Content Section -->
+    <div class="container">
+        <div class="row">
+            <!-- Times of India News Column -->
+            <div class="col-md-6">
+                <h3 class="text-center mb-4">News from Times of India</h3>
+                {% for n in toi_news %}
+                <div class="news-card d-flex justify-content-between align-items-center">
+                    <h5>{{n}}</h5>
+                    <button class="ttsBtn ml-auto" data-news="{{n}}">🔊 Speak</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Hindustan Times News Column -->
+            <div class="col-md-6">
+                <h3 class="text-center mb-4">News from Hindustan Times</h3>
+                {% for htn in ht_news %}
+                <div class="news-card d-flex justify-content-between align-items-center">
+                    <h5>{{htn}}</h5>
+                    <button class="ttsBtn ml-auto" data-news="{{htn}}">🔊 Speak</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and JS Files -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Text-to-Speech JavaScript -->
+    <script>
+        // Function to convert text to speech using Web Speech API
+        function textToSpeech(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Text-to-Speech is not supported in this browser.");
+            }
+        }
+
+        // Event listener for Text-to-Speech buttons
+        document.querySelectorAll('.ttsBtn').forEach(button => {
+            button.addEventListener('click', function() {
+                const newsContent = this.getAttribute('data-news');
+                textToSpeech(newsContent);
+            });
+        });
+    </script>
+</body>
+</html>
